@@ -1,12 +1,30 @@
-name: Build and Push Docker Image
+name: Build and Push Docker Images
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: 
+  workflow_dispatch:
+    inputs:
+      webcerberusPackageFileName:
+        description: The WebCerberus application prebuilded package file name
+        required: true
+        default: 'WebPersephoneApp_8.3.8648_kubernetes.tgz'
+        type: choice
+        options:
+        - 'WebPersephoneApp_8.3.8648_kubernetes.tgz'
+      pshPackageFileName:
+        description: The PersephoneShell tool prebuilded package file name
+        required: true
+        default: 'PersephoneShell_2023.09.06_kubernetes.tgz'
+        type: choice
+        options:
+        - 'PersephoneShell_2023.09.06_kubernetes.tgz'
+      packageDownloadLinkURL:
+        description: The URL of site where the packages are located
+        required: true
+        default: 'http://work.pandeiasoft.com/tmp/'
+        type: choice
+        options:
+        - 'PersephoneShell_2023.09.06_kubernetes.tgz'
+
 
 jobs:
   build:
@@ -25,15 +43,21 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+    - name: 'Get Persephone Shell package: ${{ inputs.webcerberusPackageFileName }}'
+      run: mkdir ./Packages && curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.webcerberusPackageFileName }} --output ./Packages/${{ inputs.webcerberusPackageFileName }}
+
     - name: Build and push WebCerberus image
       uses: docker/build-push-action@v2
       with:
         context: .
         file: ./Dockerfiles/Dockerfile_WebCerberus
         push: true
-        tags: persephonesoft/$(applicationImageName):${{ github.ref }}
+        tags: ykuharchuk/webcerberus:${{ github.ref }}
         build-args: |
-          PackageFileName=${{ parameters.PackageFileName }}
+          PackageFileName=${{ inputs.webcerberusPackageFileName }}
+
+    - name: 'Get Persephone Shell package: ${{ inputs.webcerberusPackageFileName }}'
+      run: curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.pshPackageFileName }} --output ./Packages/${{ inputs.pshPackageFileName }}
 
     - name: Build and push PersephoneShell image
       uses: docker/build-push-action@v2
@@ -41,6 +65,7 @@ jobs:
         context: .
         file: ./Dockerfiles/Dockerfile_PersephoneShell
         push: true
-        tags: persephonesoft/$(applicationImageName):${{ github.ref }}
+        tags: ykuharchuk/persephoneshell:${{ github.ref }}
         build-args: |
-          PackageFileName=${{ parameters.PackageFileName }}
+          PackageFileName=${{ inputs.pshPackageFileName }}
+
