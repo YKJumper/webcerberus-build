@@ -44,7 +44,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: 'Get Persephone Shell package: ${{ inputs.webcerberusPackageFileName }}'
-      run: mkdir curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.webcerberusPackageFileName }} --output ./Packages/${{ inputs.webcerberusPackageFileName }}
+      run: curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.webcerberusPackageFileName }} --output ./Packages/${{ inputs.webcerberusPackageFileName }}
 
     - name: Build and push WebCerberus image
       uses: docker/build-push-action@v2
