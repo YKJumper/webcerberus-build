@@ -1,0 +1,26 @@
+
+
+###
+### Build stage
+###
+
+FROM mono:latest as build-env
+ARG PackageFileName
+RUN mkdir /opt/app
+WORKDIR /opt/app
+
+# COPY ./Kubernetes/Packages/$PackageFileName ./
+COPY ./Packages/ ./
+
+RUN tar -xvzf /opt/app/${PackageFileName} \
+    && rm /opt/app/${PackageFileName}
+
+##========================
+FROM mono:latest
+RUN useradd pshuser -u 1001 --create-home --user-group
+COPY --chown=pshuser --from=build-env /opt/app/ /home/pshuser/app/
+USER 1001
+WORKDIR /home/pshuser/app
+
+# Define enteypoint
+ENTRYPOINT /bin/bash -c 'while true; do sleep 3600; done'

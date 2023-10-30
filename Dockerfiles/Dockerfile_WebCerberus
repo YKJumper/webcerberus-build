@@ -1,0 +1,31 @@
+
+
+###
+### Build stage
+###
+
+FROM mono:latest as build-env
+ARG ContainerPort=8080
+ARG PackageFileName
+RUN mkdir /opt/app
+WORKDIR /opt/app
+
+COPY ./Packages/ ./
+
+RUN tar -xvzf /opt/app/${PackageFileName} \
+    && rm /opt/app/${PackageFileName}
+
+##========================
+FROM mono:latest
+RUN useradd appuser -u 1001 --create-home --user-group
+ARG ContainerPort=8080
+ENV env_ContainerPort=$ContainerPort
+COPY --chown=appuser --from=build-env /opt/app/ /home/appuser/app/
+USER 1001
+WORKDIR /home/appuser/app
+
+# Container port
+EXPOSE $ContainerPort/tcp
+
+# Define enteypoint
+ENTRYPOINT ["mono", "SelfHostingWebCerberus.exe", "http://*:8080/"]
