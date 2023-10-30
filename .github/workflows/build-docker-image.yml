@@ -23,7 +23,7 @@ on:
         default: 'http://work.pandeiasoft.com/tmp/'
         type: choice
         options:
-        - 'PersephoneShell_2023.09.06_kubernetes.tgz'
+        - 'http://work.pandeiasoft.com/tmp/'
 
 
 jobs:
