@@ -52,7 +52,7 @@ jobs:
         context: .
         file: ./Dockerfiles/Dockerfile_WebCerberus
         push: true
-        tags: ykuharchuk/webcerberus:${{ github.ref }}
+        tags: ykuharchuk/webcerberus:${{ github.run_number }}
         build-args: |
           PackageFileName=${{ inputs.webcerberusPackageFileName }}
 
@@ -65,7 +65,7 @@ jobs:
         context: .
         file: ./Dockerfiles/Dockerfile_PersephoneShell
         push: true
-        tags: ykuharchuk/persephoneshell:${{ github.ref }}
+        tags: ykuharchuk/persephoneshell:${{ github.run_number }}
         build-args: |
           PackageFileName=${{ inputs.pshPackageFileName }}
 
