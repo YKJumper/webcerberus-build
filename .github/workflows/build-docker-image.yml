@@ -46,7 +46,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: 'Get Persephone Shell package: ${{ inputs.webcerberusPackageFileName }}'
-      run: curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.webcerberusPackageFileName }} --output ./Packages/${{ inputs.webcerberusPackageFileName }}
+      run: curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.webcerberusPackageFileName }} --output ./${{ inputs.webcerberusPackageFileName }}
 
     - name: Build and push WebCerberus image
       uses: docker/build-push-action@v2
@@ -59,7 +59,7 @@ jobs:
           PackageFileName=${{ inputs.webcerberusPackageFileName }}
 
     - name: 'Get Persephone Shell package: ${{ inputs.webcerberusPackageFileName }}'
-      run: curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.pshPackageFileName }} --output ./Packages/${{ inputs.pshPackageFileName }}
+      run: curl ${{ inputs.packageDownloadLinkURL }}${{ inputs.pshPackageFileName }} --output ./${{ inputs.pshPackageFileName }}
 
     - name: Build and push PersephoneShell image
       uses: docker/build-push-action@v2
