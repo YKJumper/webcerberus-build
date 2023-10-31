@@ -10,6 +10,7 @@ on:
         type: choice
         options:
         - 'WebPersephoneApp_8.3.8648_kubernetes.tgz'
+        - 'WebPersephoneApp_8.3.fake_kubernetes.tgz'
       pshPackageFileName:
         description: The PersephoneShell tool prebuilded package file name
         required: true
@@ -17,6 +18,7 @@ on:
         type: choice
         options:
         - 'PersephoneShell_2023.09.06_kubernetes.tgz'
+        - 'PersephoneShell_Fake_kubernetes.tgz'
       packageDownloadLinkURL:
         description: The URL of site where the packages are located
         required: true
