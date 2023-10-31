@@ -37,13 +37,15 @@ on:
       imageTag:
         description: The Docker image custom tag. If empty build run_number is used as the tag
         required: true
-        default: dev-${{ github.run_number }}
+        default: ''
         type: string
 
 
 jobs:
   build:
     runs-on: ubuntu-latest
+  env:
+    imageTag: ${{ if -not  }}
 
     steps:
     - name: Checkout code
