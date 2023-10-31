@@ -6,7 +6,7 @@ on:
       imageRepoAccount:
         description: The Docker.io repo account to store images 
         required: true
-        default: 'ykuharchuk'
+        default: 'persephonesoft'
         type: choice
         options:
         - 'ykuharchuk'
