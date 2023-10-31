@@ -3,6 +3,14 @@ name: Build and Push Docker Images
 on: 
   workflow_dispatch:
     inputs:
+      imageRepoAccount:
+        description: The Docker.io repo account to store images 
+        required: true
+        default: 'ykuharchuk'
+        type: choice
+        options:
+        - 'ykuharchuk'
+        - 'persephonesoft'
       webcerberusPackageFileName:
         description: The WebCerberus application prebuilded package file name
         required: true
@@ -20,12 +28,17 @@ on:
         - 'PersephoneShell_2023.09.06_kubernetes.tgz'
         - 'PersephoneShell_Fake_kubernetes.tgz'
       packageDownloadLinkURL:
-        description: The URL of site where the packages are located
+        description: The URL of a site where the packages are located
         required: true
         default: 'http://work.pandeiasoft.com/tmp/'
         type: choice
         options:
         - 'http://work.pandeiasoft.com/tmp/'
+      imageTag:
+        description: The Docker image custom tag. If empty build run_number is used as the tag
+        required: true
+        default: dev-${{ github.run_number }}
+        type: string
 
 
 jobs:
@@ -54,7 +67,7 @@ jobs:
         context: .
         file: ./Dockerfiles/Dockerfile_WebCerberus
         push: true
-        tags: ykuharchuk/webcerberus:${{ github.run_number }}
+        tags: ${{ inputs.imageRepoAccount }}/webcerberus:${{ inputs.imageTag }}
         build-args: |
           PackageFileName=${{ inputs.webcerberusPackageFileName }}
 
@@ -67,7 +80,7 @@ jobs:
         context: .
         file: ./Dockerfiles/Dockerfile_PersephoneShell
         push: true
-        tags: ykuharchuk/persephoneshell:${{ github.run_number }}
+        tags: ${{ inputs.imageRepoAccount }}/persephoneshell:${{ inputs.imageTag }}
         build-args: |
           PackageFileName=${{ inputs.pshPackageFileName }}
 
